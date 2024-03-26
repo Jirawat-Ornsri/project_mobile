@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1032883481959",
+    "project_id": "wherewaterlogin",
+    "storage_bucket": "wherewaterlogin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032883481959:android:435bd5c3b895fbb66753c2",
+        "android_client_info": {
+          "package_name": "com.example.project_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr0lFGZkryAXVOk8WUybUMV7QiTLpms4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
