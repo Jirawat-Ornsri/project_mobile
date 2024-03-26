@@ -277,8 +277,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                                           // alert message
                                           Fluttertoast.showToast(
-                                              msg:
-                                                  "สร้างบัญชีผู้ใช้เรียบร้อยแล้ว",
+                                              msg: "created account success.",
                                               gravity: ToastGravity.TOP);
 
                                           // go to HomeScreen 
