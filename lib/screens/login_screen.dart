@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:project_mobile/models/profile.dart';
-import 'package:project_mobile/screens/home_screen.dart';
+import 'package:project_mobile/screens/mobile_screen.dart';
 import 'package:project_mobile/screens/signup_screen.dart';
 import 'package:project_mobile/utils/colors.dart';
 
@@ -18,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-  Profile profile = Profile(username: '', email: '', password: '');
+  Profile profile = Profile(username: '', email: '', password: '', imageUrl: '');
 
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Navigator.pushReplacement(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                            return HomeScreen();
+                                            return MobileScreen();
                                           }));
                                         });
                                       } on FirebaseAuthException catch (e) {
@@ -248,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "have an account?",
+                          "Don't have an account?",
                           style: TextStyle(fontSize: 13),
                         ),
                         TextButton(
