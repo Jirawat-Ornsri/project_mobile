@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:project_mobile/screens/login_screen.dart';
 import 'package:project_mobile/screens/mobile_screen.dart';
 import 'package:project_mobile/utils/colors.dart';
-
+import 'firebase_options.dart';
 
 
 void main() async {
@@ -25,7 +25,8 @@ void main() async {
       ),
     );
   } else {
-    await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
   }
   runApp(const MyApp());
 }

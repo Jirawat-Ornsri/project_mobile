@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -31,15 +32,22 @@ class _SignupScreenState extends State<SignupScreen> {
   final formKey = GlobalKey<FormState>();
 
   // get porfile model
-  Profile profile =
-      Profile(username: '', email: '', password: '', imageUrl: '');
+  Profile profile = Profile(
+      username: '',
+      email: '',
+      password: '',
+      imageBase64: '',
+      height: '',
+      weight: 0,
+      gender: '');
 
   // connect firebase
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
   // function select image
   void selectImage() async {
-    Uint8List im = await pickImage(ImageSource.gallery);
+    Uint8List? im = await pickImage(ImageSource.gallery);
+
     setState(() {
       _image = im;
     });
@@ -47,6 +55,20 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ImageFile -> Bytes -> String (Base64) -> FirebaseFirestore
+    // Firestore -> String -> Bytes -> Image Widget
+
+    // {
+    //  id:
+    // name:
+    // imageBase64: String
+    // }
+    // Widget image = CircleAvatar();
+
+    // if (_image != null) {
+    //   image = CircleAvatar(backgroundImage: MemoryImage(_image!),);
+    // }
+
     return FutureBuilder(
         future: firebase,
         builder: (context, snapshot) {
@@ -64,35 +86,34 @@ class _SignupScreenState extends State<SignupScreen> {
           // if connect success
           if (snapshot.connectionState == ConnectionState.done) {
             return Scaffold(
-              body: Center(
-                child: Column(
-                  children: [
-                    Flexible(
-                      flex: 2,
-                      child: Container(),
-                    ),
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
 
-                    //  ***** title ********
-                    const Text(
-                      'SIGN UP',
-                      style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: fourColor),
-                    ),
+                      //  ***** title ********
+                      const Text(
+                        'SIGN UP',
+                        style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: fourColor),
+                      ),
 
-                    const SizedBox(
-                      height: 60,
-                    ),
+                      const SizedBox(
+                        height: 60,
+                      ),
 
-                    Form(
-                        key: formKey,
-                        child: SingleChildScrollView(
+                      Form(
+                          key: formKey,
                           child: Column(
                             children: [
                               // ***** profile pic *****
                               // ImageField(),
-                              
+
                               Stack(
                                 children: [
                                   _image != null
@@ -136,6 +157,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               Container(
                                 width: 267,
                                 child: TextFormField(
+                                  maxLength: 10,
                                   validator: RequiredValidator(
                                       errorText: "input your username."),
                                   onSaved: (String? username) {
@@ -143,6 +165,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   },
                                   obscureText: false,
                                   decoration: InputDecoration(
+                                      counterText: '',
                                       filled: true,
                                       fillColor: firstColor,
                                       border: OutlineInputBorder(
@@ -284,6 +307,170 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
 
                               const SizedBox(
+                                height: 35,
+                              ),
+
+                              // ***** height field ******
+                              Container(
+                                width: 267,
+                                child: TextFormField(
+                                  maxLength: 3,
+                                  validator: MultiValidator([
+                                    RequiredValidator(
+                                        errorText: 'input your height.'),
+                                    PatternValidator(r'^[0-9]+$',
+                                        errorText: 'input only numbers'),
+                                  ]),
+                                  onSaved: (String? height) {
+                                    profile.height = height!;
+                                  },
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                      counterText: '',
+                                      filled: true,
+                                      fillColor: firstColor,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            14), // เพิ่มความโค้งของ border
+                                        borderSide: const BorderSide(
+                                            color: firstColor,
+                                            width: 2.0), // เปลี่ยนสีเส้นขอบ
+                                      ),
+                                      // *** on focus ***
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: const BorderSide(
+                                            color: secondColor,
+                                            width:
+                                                2.0), // เส้นขอบเมื่อได้รับการ focus
+                                      ),
+                                      // *** on enable ***
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: const BorderSide(
+                                            color: firstColor,
+                                            width:
+                                                2.0), // เส้นขอบเมื่อไม่ได้รับการ focus
+                                      ),
+                                      prefixIcon: const Icon(
+                                        Icons.animation,
+                                        color: thirdColor,
+                                      ),
+                                      labelText: 'Height',
+                                      labelStyle:
+                                          const TextStyle(color: secondColor)),
+                                ),
+                              ),
+
+                              const SizedBox(
+                                height: 35,
+                              ),
+
+                              // ***** weight field ******
+                              Container(
+                                width: 267,
+                                child: TextFormField(
+                                  maxLength: 3,
+                                  validator: MultiValidator([
+                                    RequiredValidator(
+                                        errorText: 'input your weight.'),
+                                    PatternValidator(r'^[0-9]+$',
+                                        errorText: 'input only numbers'),
+                                  ]),
+                                  onSaved: (String? weight) {
+                                    profile.weight = int.parse(weight!);
+                                  },
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                      counterText: '',
+                                      filled: true,
+                                      fillColor: firstColor,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            14), // เพิ่มความโค้งของ border
+                                        borderSide: const BorderSide(
+                                            color: firstColor,
+                                            width: 2.0), // เปลี่ยนสีเส้นขอบ
+                                      ),
+                                      // *** on focus ***
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: const BorderSide(
+                                            color: secondColor,
+                                            width:
+                                                2.0), // เส้นขอบเมื่อได้รับการ focus
+                                      ),
+                                      // *** on enable ***
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: const BorderSide(
+                                            color: firstColor,
+                                            width:
+                                                2.0), // เส้นขอบเมื่อไม่ได้รับการ focus
+                                      ),
+                                      prefixIcon: const Icon(
+                                        Icons.fitness_center,
+                                        color: thirdColor,
+                                      ),
+                                      labelText: 'Weight',
+                                      labelStyle:
+                                          const TextStyle(color: secondColor)),
+                                ),
+                              ),
+
+                              const SizedBox(
+                                height: 35,
+                              ),
+
+                              // ***** gender field ******
+                              Container(
+                                width: 267,
+                                child: TextFormField(
+                                  maxLength: 10,
+                                  validator: RequiredValidator(
+                                      errorText: "input your gender."),
+                                  onSaved: (String? gender) {
+                                    profile.gender = gender!;
+                                  },
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                      counterText: '',
+                                      filled: true,
+                                      fillColor: firstColor,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            14), // เพิ่มความโค้งของ border
+                                        borderSide: const BorderSide(
+                                            color: firstColor,
+                                            width: 2.0), // เปลี่ยนสีเส้นขอบ
+                                      ),
+                                      // *** on focus ***
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: const BorderSide(
+                                            color: secondColor,
+                                            width:
+                                                2.0), // เส้นขอบเมื่อได้รับการ focus
+                                      ),
+                                      // *** on enable ***
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: const BorderSide(
+                                            color: firstColor,
+                                            width:
+                                                2.0), // เส้นขอบเมื่อไม่ได้รับการ focus
+                                      ),
+                                      prefixIcon: const Icon(
+                                        Icons.transgender_sharp,
+                                        color: thirdColor,
+                                      ),
+                                      labelText: 'Gender',
+                                      labelStyle:
+                                          const TextStyle(color: secondColor)),
+                                ),
+                              ),
+
+                              const SizedBox(
                                 height: 86,
                               ),
 
@@ -326,6 +513,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                           Map<String, dynamic> userData = {
                                             'username': profile.username,
                                             'email': profile.email,
+                                            'height': profile.height,
+                                            'weight': profile.weight,
+                                            'gender': profile.gender
 
                                             // เพิ่มข้อมูลเพิ่มเติมตามต้องการ
                                           };
@@ -349,7 +539,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                             backgroundColor: firstColor,
                                           );
 
-                                          // go to HomeScreen
+                                          // go to User info scre
                                           Navigator.pushReplacement(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
@@ -370,7 +560,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         }
                                         Fluttertoast.showToast(
                                           msg: message!,
-                                          gravity: ToastGravity.BOTTOM,
+                                          gravity: ToastGravity.TOP,
                                           timeInSecForIosWeb:
                                               5, // ระยะเวลาในการแสดง toast สำหรับ iOS และ web
                                         );
@@ -380,40 +570,40 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                               ),
                             ],
+                          )),
+
+                      const SizedBox(
+                        height: 30,
+                      ),
+
+                      // ***** go to login screen *****
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "have an account?",
+                            style: TextStyle(fontSize: 13),
                           ),
-                        )),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return LoginScreen();
+                                }));
+                              },
+                              child: const Text(
+                                'Sign in.',
+                                style:
+                                    TextStyle(fontSize: 13, color: fourColor),
+                              ))
+                        ],
+                      ),
 
-                    Flexible(
-                      flex: 2,
-                      child: Container(),
-                    ),
-
-                    // ***** go to login screen *****
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "have an account?",
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return LoginScreen();
-                              }));
-                            },
-                            child: const Text(
-                              'Sign in.',
-                              style: TextStyle(fontSize: 13, color: fourColor),
-                            ))
-                      ],
-                    ),
-
-                    const SizedBox(
-                      height: 25,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 25,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

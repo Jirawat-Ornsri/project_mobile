@@ -18,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-  Profile profile = Profile(username: '', email: '', password: '', imageUrl: '');
+  Profile profile = Profile(username: '', email: '', password: '', imageBase64: '', height: '', weight: 0, gender: '');
 
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
@@ -228,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         }
                                         Fluttertoast.showToast(
                                             msg: txt,
-                                            gravity: ToastGravity.CENTER);
+                                            gravity: ToastGravity.TOP);
                                       }
                                     }
                                   },
