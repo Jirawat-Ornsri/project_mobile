@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:project_mobile/page/edit_profile_screen.dart';
 import 'package:project_mobile/screens/login_screen.dart';
-import 'package:project_mobile/utils/box_info.dart';
+import 'package:project_mobile/widgets/box_info.dart';
 import 'package:project_mobile/utils/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -23,7 +24,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     result = ((weight / 2) * 2.2 * 30) / 1000;
     return double.parse(result.toStringAsFixed(1));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           final weight = snapshot.data!.get('weight');
           final gender = snapshot.data!.get('gender');
 
-
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -66,19 +65,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(
                     height: 53,
                   ),
-              
+
                   //  *** part title profile ***
                   Container(
                     margin: const EdgeInsets.only(left: 48, right: 48),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
                         const SizedBox(
                           width: 50,
                           height: 24,
                         ),
-              
+
                         // text title
                         const Text(
                           'Profile',
@@ -87,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               fontWeight: FontWeight.bold,
                               color: fourColor),
                         ),
-              
+
                         // logout button
                         IconButton(
                             onPressed: () {
@@ -105,14 +103,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-              
+
                   // *** part profile picture ***
                   Stack(
                     children: [
                       Container(
                         width: 334,
                         height: 200,
-                        margin: const EdgeInsets.only(left: 48, right: 48, top: 75),
+                        margin:
+                            const EdgeInsets.only(left: 48, right: 48, top: 75),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: Colors.white,
@@ -143,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: CircleAvatar(
-                            backgroundColor: thirdColor,
+                            backgroundImage: NetworkImage('https://zultimate.com/wp-content/uploads/2019/12/default-profile.png'),
                             radius: 50,
                           ),
                         ),
@@ -168,7 +167,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 37,
                               ),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  // go to Edit Profile screen
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return EditProfileScreen();
+                                  }));
+                                },
                                 child: const Text(
                                   'Edit Profile',
                                   style: TextStyle(
@@ -180,11 +185,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     fixedSize: MaterialStateProperty.all<Size>(
                                         Size.fromHeight(33)),
                                     backgroundColor:
-                                        MaterialStatePropertyAll<Color>(fourColor),
+                                        MaterialStatePropertyAll<Color>(
+                                            fourColor),
                                     shape: MaterialStatePropertyAll<
                                             RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(18),
+                                            borderRadius:
+                                                BorderRadius.circular(18),
                                             side: BorderSide(width: 1)))),
                               ),
                             ],
@@ -193,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-              
+
                   // *** part show email ***
                   Container(
                     width: 334,
@@ -201,7 +208,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     margin: const EdgeInsets.only(left: 48, right: 48, top: 25),
                     decoration: BoxDecoration(
                       border: Border.all(
-                          color: Colors.white, width: 1, style: BorderStyle.solid),
+                          color: Colors.white,
+                          width: 1,
+                          style: BorderStyle.solid),
                       borderRadius: BorderRadius.circular(
                           24), // เพิ่ม border radius ที่คุณต้องการ
                       boxShadow: [
@@ -227,36 +236,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           size: 30,
                           color: fourColor,
                         ),
-                        Text('$email', style: const TextStyle(fontSize: 16, color: thirdColor, fontWeight: FontWeight.w700),)
+                        Text(
+                          '$email',
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: thirdColor,
+                              fontWeight: FontWeight.w700),
+                        )
                       ],
                     ),
                   ),
-              
+
                   // *** part Info row 1 ***
                   Container(
                     margin: EdgeInsets.only(right: 48, left: 48, top: 27),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        BoxInfo(text: 'Height', data: '$height', unit: 'cm', icon: Icons.person,),
-                        BoxInfo(text: 'Weight', data: '$weight', unit: 'kg', icon: Icons.fitness_center,)
+                        BoxInfo(
+                          text: 'Height',
+                          data: '$height',
+                          unit: 'cm',
+                          icon: Icons.person,
+                        ),
+                        BoxInfo(
+                          text: 'Weight',
+                          data: '$weight',
+                          unit: 'kg',
+                          icon: Icons.fitness_center,
+                        )
                       ],
                     ),
                   ),
-              
+
                   // *** part Info row 2 ***
                   Container(
                     margin: EdgeInsets.only(right: 48, left: 48, top: 27),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        BoxInfo(text: 'Gender', data: '$gender', unit: '', icon: Icons.transgender,),
-                        BoxInfo(text: 'Daily', data: '${waterCal(weight)}', unit: 'lt', icon: Icons.water_drop,),
+                        BoxInfo(
+                          text: 'Gender',
+                          data: '$gender',
+                          unit: '',
+                          icon: Icons.transgender,
+                        ),
+                        BoxInfo(
+                          text: 'Daily',
+                          data: '${waterCal(weight)}',
+                          unit: 'lt',
+                          icon: Icons.water_drop,
+                        ),
                       ],
                     ),
                   ),
-            
-                  const SizedBox(height: 30,)
+
+                  const SizedBox(
+                    height: 30,
+                  )
                 ],
               ),
             ),

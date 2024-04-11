@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:project_mobile/models/reminder.dart';
+
 class Profile{
   String username;
   String email;
@@ -8,6 +10,7 @@ class Profile{
   String height;
   int weight;
   String gender;
+  List<Reminder> reminders;
 
   Profile({
     required this.username,
@@ -17,5 +20,6 @@ class Profile{
     required this.height,
     required this.weight,
     required this.gender,
+    required this.reminders,
   });
 }
