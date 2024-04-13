@@ -21,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // fn calculate weight
   double waterCal(int weight) {
     double result;
-    result = ((weight / 2) * 2.2 * 30) / 1000;
+    result = (weight * 2.2 * (30/2)) / 1000;
     return double.parse(result.toStringAsFixed(1));
   }
 

@@ -27,6 +27,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   // get reminder model
   Reminder reminder = Reminder(title: '', des: '', time: null);
 
+  // get profile model
   Profile profile = Profile(
       username: '',
       email: '',
@@ -35,7 +36,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       height: '',
       weight: 0,
       gender: '',
-      reminders: []);
+      reminders: [], drinks: []);
 
   // connect firebase
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
@@ -73,7 +74,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               time: (e['time'] as Timestamp?)?.toDate() ??
                                   DateTime.now(),
                             ))
-                        .toList(),
+                        .toList(), 
+                    drinks: [],
                   );
                   return Scaffold(
                       body: SafeArea(

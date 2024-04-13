@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
       height: '',
       weight: 0,
       gender: '', 
-      reminders: []
+      reminders: [], drinks: []
     );
 
   // connect firebase
