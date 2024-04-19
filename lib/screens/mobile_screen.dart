@@ -54,7 +54,7 @@ class _MobileScreenState extends State<MobileScreen> {
         children: [
           HomeScreen(),
           //StaticScreen(),
-          //MapScreen(),
+          MapScreen(),
           ReminderScreen(),
           ProfileScreen(),
         ],
