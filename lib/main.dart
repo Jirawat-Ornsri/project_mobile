@@ -6,7 +6,6 @@ import 'package:project_mobile/screens/login_screen.dart';
 import 'package:project_mobile/screens/mobile_screen.dart';
 import 'package:project_mobile/utils/colors.dart';
 import 'firebase_options.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 void main() async {

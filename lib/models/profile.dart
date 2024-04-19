@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:project_mobile/models/drink.dart';
 import 'package:project_mobile/models/reminder.dart';
@@ -7,7 +6,7 @@ class Profile{
   String username;
   String email;
   String password;
-  String imageBase64;
+  String photoUrl;
   String height;
   int weight;
   String gender;
@@ -18,7 +17,7 @@ class Profile{
     required this.username,
     required this.email,
     required this.password,
-    required this.imageBase64,
+    required this.photoUrl,
     required this.height,
     required this.weight,
     required this.gender,

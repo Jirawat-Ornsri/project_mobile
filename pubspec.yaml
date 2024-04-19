@@ -46,6 +46,8 @@ dependencies:
   image_field: ^0.0.10
   google_maps_flutter: ^2.6.0
   fl_chart: ^0.60.0
+  flutter_local_notifications: ^17.0.1
+  custom_info_window: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -70,9 +72,20 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/coconut-drink.png
+    - assets/coffee-cup.png
+    - assets/glass-of-water.png
+    - assets/hot-chocolate.png
+    - assets/lemonade.png
+    - assets/milk.png
+    - assets/orange-juice.png
+    - assets/protein.png
+    - assets/smoothie.png
+    - assets/soda-bottle.png
+    - assets/tea.png
+    - assets/yogurt.png
+   
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

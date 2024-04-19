@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-  Profile profile = Profile(username: '', email: '', password: '', imageBase64: '', height: '', weight: 0, gender: '', reminders: [], drinks: []);
+  Profile profile = Profile(
+      username: '',
+      email: '',
+      password: '',
+      photoUrl: '',
+      height: '',
+      weight: 0,
+      gender: '',
+      reminders: [],
+      drinks: []);
 
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
@@ -46,9 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Center(
                     child: Column(
                       children: [
-                        
-                        const SizedBox(height: 180,),
-                  
+                        const SizedBox(
+                          height: 160,
+                        ),
+
                         //  ***** title ********
                         const Text(
                           'SIGN IN',
@@ -57,11 +69,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.bold,
                               color: fourColor),
                         ),
-                  
+
                         const SizedBox(
                           height: 90,
                         ),
-                  
+
                         Form(
                             key: formKey,
                             child: SingleChildScrollView(
@@ -94,7 +106,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           // *** on focus ***
                                           focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(14),
+                                            borderRadius:
+                                                BorderRadius.circular(14),
                                             borderSide: const BorderSide(
                                                 color: secondColor,
                                                 width:
@@ -102,7 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           // *** on enable ***
                                           enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(14),
+                                            borderRadius:
+                                                BorderRadius.circular(14),
                                             borderSide: const BorderSide(
                                                 color: firstColor,
                                                 width:
@@ -113,15 +127,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                             color: thirdColor,
                                           ),
                                           labelText: 'Email',
-                                          labelStyle:
-                                              const TextStyle(color: secondColor)),
+                                          labelStyle: const TextStyle(
+                                              color: secondColor)),
                                     ),
                                   ),
-                  
+
                                   const SizedBox(
                                     height: 35,
                                   ),
-                  
+
                                   // ***** password field ******
                                   Container(
                                     width: 267,
@@ -144,7 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           // *** on focus ***
                                           focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(14),
+                                            borderRadius:
+                                                BorderRadius.circular(14),
                                             borderSide: const BorderSide(
                                                 color: secondColor,
                                                 width:
@@ -152,7 +167,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           // *** on enable ***
                                           enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(14),
+                                            borderRadius:
+                                                BorderRadius.circular(14),
                                             borderSide: const BorderSide(
                                                 color: firstColor,
                                                 width:
@@ -163,18 +179,82 @@ class _LoginScreenState extends State<LoginScreen> {
                                             color: thirdColor,
                                           ),
                                           labelText: 'Password',
-                                          labelStyle:
-                                              const TextStyle(color: secondColor)),
+                                          labelStyle: const TextStyle(
+                                              color: secondColor)),
                                     ),
                                   ),
-                  
-                                  const SizedBox(
-                                    height: 86,
+
+                                  // forgot password button
+                                  Container(
+                                    width: 267,
+                                    alignment: Alignment.centerLeft,
+                                    child: TextButton(
+                                      child: const Text(
+                                        'forgot password?',
+                                        style: TextStyle(
+                                            color: thirdColor,
+                                            fontSize: 12,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                      onPressed: () async {
+                                        if (formKey.currentState!.validate()) {
+                                          formKey.currentState!.save();
+                                          try {
+                                            await FirebaseAuth.instance
+                                                .sendPasswordResetEmail(
+                                                    email: profile.email);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    'Password reset email has been sent to ${profile.email}.'),
+                                                backgroundColor: Colors
+                                                    .green, // สีพื้นหลังของ SnackBar
+                                                duration:
+                                                    const Duration(seconds: 2),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            );
+                                          } on FirebaseAuthException catch (e) {
+                                            print(e.message);
+                                            String? txt;
+                                            if (e.message ==
+                                                'There is no user record corresponding to this identifier. The user may have been deleted.') {
+                                              txt = 'User not found.';
+                                            } else {
+                                              txt = e.message!;
+                                            }
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(txt),
+                                                backgroundColor: Colors
+                                                    .red, // สีพื้นหลังของ SnackBar
+                                                duration:
+                                                    const Duration(seconds: 2),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                    ),
                                   ),
-                  
+
+                                  const SizedBox(
+                                    height: 55,
+                                  ),
+
                                   // ***** Login button *****
                                   Container(
-                                    width: 276,
+                                    width: 267,
                                     height: 45,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
@@ -206,10 +286,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     password: profile.password)
                                                 // when login success
                                                 .then((value) {
-                  
                                               // reset form field
                                               formKey.currentState!.reset();
-                  
+
                                               // go to HomeScreen
                                               Navigator.pushReplacement(context,
                                                   MaterialPageRoute(
@@ -222,13 +301,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                             String? txt;
                                             if (e.message ==
                                                 'The supplied auth credential is incorrect, malformed or has expired.') {
-                                              txt = 'Email or password Incorrect.';
+                                              txt =
+                                                  'Email or password Incorrect.';
                                             } else {
                                               txt = e.message!;
                                             }
-                                            Fluttertoast.showToast(
-                                                msg: txt,
-                                                gravity: ToastGravity.TOP);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(txt),
+                                                backgroundColor: Colors
+                                                    .red, // สีพื้นหลังของ SnackBar
+                                                duration:
+                                                    const Duration(seconds: 2),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            );
                                           }
                                         }
                                       },
@@ -238,8 +329,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )),
 
-                        const SizedBox(height: 140,),
-                  
+                        const SizedBox(
+                          height: 140,
+                        ),
+
                         // ***** go to sign up screen *****
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -257,11 +350,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 child: const Text(
                                   'Sign up.',
-                                  style: TextStyle(fontSize: 13, color: fourColor),
+                                  style:
+                                      TextStyle(fontSize: 13, color: fourColor),
                                 ))
                           ],
                         ),
-                  
+
                         const SizedBox(
                           height: 25,
                         ),

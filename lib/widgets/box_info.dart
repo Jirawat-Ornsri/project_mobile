@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project_mobile/utils/colors.dart';
 
@@ -8,7 +7,11 @@ class BoxInfo extends StatelessWidget {
   final String unit;
   final IconData icon;
   const BoxInfo(
-      {super.key, required this.text, required this.data, required this.unit, required this.icon});
+      {super.key,
+      required this.text,
+      required this.data,
+      required this.unit,
+      required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +21,7 @@ class BoxInfo extends StatelessWidget {
       decoration: BoxDecoration(
         color: firstColor,
         borderRadius: BorderRadius.circular(24), // เพิ่ม border radius ที่นี่
-        border:
-            Border.all(color: firstColor), // เพิ่ม border อื่น ๆ ตามต้องการ
+        border: Border.all(color: firstColor), // เพิ่ม border อื่น ๆ ตามต้องการ
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -27,11 +29,24 @@ class BoxInfo extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Icon(icon, size: 24,),
-              Text('$text', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: fourColor),)
+              Icon(
+                icon,
+                size: 24,
+              ),
+              Text(
+                '$text',
+                style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: fourColor),
+              )
             ],
           ),
-          Text('$data $unit', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600, color: secondColor),)
+          Text(
+            '$data $unit',
+            style: const TextStyle(
+                fontSize: 32, fontWeight: FontWeight.w600, color: secondColor),
+          )
         ],
       ),
     );

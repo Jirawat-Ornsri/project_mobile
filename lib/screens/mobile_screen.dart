@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project_mobile/page/home_screen.dart';
 import 'package:project_mobile/page/map_screen.dart';
@@ -34,7 +33,12 @@ class _MobileScreenState extends State<MobileScreen> {
   }
 
   void NavigationTapped(int page) {
-    pageController.jumpToPage(page);
+    //pageController.jumpToPage(page);
+    pageController.animateToPage(
+      page,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeOut,
+    );
   }
 
   void onPageChanged(int page) {
@@ -49,8 +53,8 @@ class _MobileScreenState extends State<MobileScreen> {
       body: PageView(
         children: [
           HomeScreen(),
-          StaticScreen(),
-          MapScreen(),
+          //StaticScreen(),
+          //MapScreen(),
           ReminderScreen(),
           ProfileScreen(),
         ],
@@ -59,7 +63,7 @@ class _MobileScreenState extends State<MobileScreen> {
         onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
@@ -73,24 +77,24 @@ class _MobileScreenState extends State<MobileScreen> {
                       color: _page == 0 ? secondColor : thirdColor),
                   label: '',
                   backgroundColor: thirdColor),
+              // BottomNavigationBarItem(
+              //     icon: Icon(Icons.bar_chart,
+              //         color: _page == 1 ? secondColor : thirdColor),
+              //     label: '',
+              //     backgroundColor: thirdColor),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.bar_chart,
+                  icon: Icon(Icons.location_on_outlined,
                       color: _page == 1 ? secondColor : thirdColor),
                   label: '',
                   backgroundColor: thirdColor),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.map,
+                  icon: Icon(Icons.alarm,
                       color: _page == 2 ? secondColor : thirdColor),
                   label: '',
                   backgroundColor: thirdColor),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.alarm,
-                      color: _page == 3 ? secondColor : thirdColor),
-                  label: '',
-                  backgroundColor: thirdColor),
-              BottomNavigationBarItem(
                   icon: Icon(Icons.person,
-                      color: _page == 4 ? secondColor : thirdColor),
+                      color: _page == 3 ? secondColor : thirdColor),
                   label: '',
                   backgroundColor: thirdColor),
             ],

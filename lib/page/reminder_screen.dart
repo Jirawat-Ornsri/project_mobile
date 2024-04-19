@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -32,11 +31,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
       username: '',
       email: '',
       password: '',
-      imageBase64: '',
+      photoUrl: '',
       height: '',
       weight: 0,
       gender: '',
-      reminders: [], drinks: []);
+      reminders: [],
+      drinks: []);
 
   // connect firebase
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
@@ -63,7 +63,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     username: data['username'] ?? '',
                     email: data['email'] ?? '',
                     password: data['password'] ?? '',
-                    imageBase64: data['imageBase64'] ?? '',
+                    photoUrl: data['photoUrl'] ?? '',
                     height: data['height'] ?? '',
                     weight: data['weight'] ?? 0,
                     gender: data['gender'] ?? '',
@@ -74,7 +74,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               time: (e['time'] as Timestamp?)?.toDate() ??
                                   DateTime.now(),
                             ))
-                        .toList(), 
+                        .toList(),
                     drinks: [],
                   );
                   return Scaffold(
@@ -137,14 +137,21 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
-                                            content: Text('Reminder deleted'),
-                                            duration: Duration(seconds: 2),
+                                            content:
+                                                const Text('Reminder deleted'),
+                                            duration:
+                                                const Duration(seconds: 2),
+                                            backgroundColor: Colors.red,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
                                           ),
                                         );
                                       }).catchError((error) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
-                                          SnackBar(
+                                          const SnackBar(
                                             content: Text(
                                                 'Failed to delete reminder'),
                                             duration: Duration(seconds: 2),
@@ -181,6 +188,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             TextFormField(
+                                              maxLength: 20,
                                               validator: RequiredValidator(
                                                   errorText: "input title."),
                                               decoration: InputDecoration(
@@ -191,6 +199,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                               },
                                             ),
                                             TextFormField(
+                                              maxLength: 30,
                                               validator: RequiredValidator(
                                                   errorText:
                                                       "input description."),
@@ -280,10 +289,20 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                                 context)
                                                             .showSnackBar(
                                                           SnackBar(
-                                                            content: Text(
+                                                            content: const Text(
                                                                 'Reminder added'),
-                                                            duration: Duration(
-                                                                seconds: 2),
+                                                            duration:
+                                                                const Duration(
+                                                                    seconds: 2),
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
                                                           ),
                                                         );
                                                         formKey.currentState!
@@ -294,7 +313,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                         ScaffoldMessenger.of(
                                                                 context)
                                                             .showSnackBar(
-                                                          SnackBar(
+                                                          const SnackBar(
                                                             content: Text(
                                                                 'Failed to add reminder'),
                                                             duration: Duration(
@@ -305,7 +324,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                     }
                                                   }
                                                 },
-                                                child: Text(
+                                                child: const Text(
                                                   'Add',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
@@ -322,7 +341,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                   },
                                 );
                               },
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -345,12 +364,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     ),
                   )));
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
               },
             );
           } else {
-            return Scaffold(
+            return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
           }
