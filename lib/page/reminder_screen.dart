@@ -179,14 +179,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                       MaterialStateProperty.all<Color>(
                                           thirdColor)),
                               onPressed: () async {
-                                // TimeOfDay? newTime = await showTimePicker(
-                                //   context: context, initialTime: TimeOfDay.now());
-
-                                // if (newTime == null) return;
-                                // setState(() {
-                                //   time = newTime;
-                                // });
-
                                 showDialog(
                                   context: context,
                                   builder: (context) {
@@ -201,7 +193,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                 TextFormField(
                                                   maxLength: 20,
                                                   validator: RequiredValidator(
-                                                      errorText: "input title."),
+                                                      errorText:
+                                                          "input title."),
                                                   decoration: InputDecoration(
                                                     hintText: 'Title',
                                                   ),
@@ -223,9 +216,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                 ),
                                                 ListTile(
                                                   onTap: () async {
-                                                    TimeOfDay? newTime = await showTimePicker(
-                                                      context: context, 
-                                                      initialTime: TimeOfDay.now(),
+                                                    TimeOfDay? newTime =
+                                                        await showTimePicker(
+                                                      context: context,
+                                                      initialTime:
+                                                          TimeOfDay.now(),
                                                     );
 
                                                     if (newTime == null) return;
@@ -245,113 +240,131 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                           newTime.minute,
                                                         );
                                                       });
-                                                    }; 
-
+                                                    }
                                                   },
-                                                  title: Text(time.format(context)), // Display the selected time here
-                                                  trailing: Icon(Icons.access_time),
+                                                  title: Text(time.format(
+                                                      context)), // Display the selected time here
+                                                  trailing:
+                                                      Icon(Icons.access_time),
                                                 ),
                                               ],
                                             ),
-                                        actions: [
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: Container(
-                                              width: 86,
-                                              height: 28,
-                                              child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(fourColor),
-                                                ),
-                                                onPressed: () {
-                                                  final user = FirebaseAuth
-                                                      .instance.currentUser;
-                                                  if (formKey.currentState!
-                                                      .validate()) {
-                                                    formKey.currentState!
-                                                        .save();
-                                                    if (selectedTime != null) {
-                                                      setState(() {
-                                                        profile.reminders
-                                                            .add(Reminder(
-                                                          title: reminder.title,
-                                                          des: reminder.des,
-                                                          time: selectedTime!,
-                                                        ));
-                                                      });
-                                                      FirebaseFirestore.instance
-                                                          .collection('users')
-                                                          .doc(user?.uid)
-                                                          .update({
-                                                        'reminders': FieldValue
-                                                            .arrayUnion([
-                                                          {
-                                                            'title':
-                                                                reminder.title,
-                                                            'description':
-                                                                reminder.des,
-                                                            'time':
-                                                                selectedTime!,
-                                                          }
-                                                        ])
-                                                      }).then((value) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: const Text(
-                                                                'Reminder added'),
-                                                            duration:
-                                                                const Duration(
-                                                                    seconds: 2),
-                                                            backgroundColor:
-                                                                Colors.green,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                          ),
-                                                        );
+                                            actions: [
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  width: 86,
+                                                  height: 28,
+                                                  child: ElevatedButton(
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all<Color>(
+                                                                  fourColor),
+                                                    ),
+                                                    onPressed: () {
+                                                      final user = FirebaseAuth
+                                                          .instance.currentUser;
+                                                      if (formKey.currentState!
+                                                          .validate()) {
                                                         formKey.currentState!
-                                                            .reset();
-                                                        selectedTime = null;
-                                                        Navigator.pop(context);
-                                                      }).catchError((error) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text(
-                                                                'Failed to add reminder'),
-                                                            duration: Duration(
-                                                                seconds: 2),
-                                                          ),
-                                                        );
-                                                      });
-                                                    }
-                                                  }
-                                                },
-                                                child: const Text(
-                                                  'Add',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: firstColor,
-                                                    fontSize: 15,
+                                                            .save();
+                                                        if (selectedTime !=
+                                                            null) {
+                                                          setState(() {
+                                                            profile.reminders
+                                                                .add(Reminder(
+                                                              title: reminder
+                                                                  .title,
+                                                              des: reminder.des,
+                                                              time:
+                                                                  selectedTime!,
+                                                            ));
+                                                          });
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'users')
+                                                              .doc(user?.uid)
+                                                              .update({
+                                                            'reminders':
+                                                                FieldValue
+                                                                    .arrayUnion([
+                                                              {
+                                                                'title':
+                                                                    reminder
+                                                                        .title,
+                                                                'description':
+                                                                    reminder
+                                                                        .des,
+                                                                'time':
+                                                                    selectedTime!,
+                                                              }
+                                                            ])
+                                                          }).then((value) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                content: const Text(
+                                                                    'Reminder added'),
+                                                                duration:
+                                                                    const Duration(
+                                                                        seconds:
+                                                                            2),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                ),
+                                                              ),
+                                                            );
+                                                            formKey
+                                                                .currentState!
+                                                                .reset();
+                                                            selectedTime = null;
+                                                            Navigator.pop(
+                                                                context);
+                                                          }).catchError(
+                                                                  (error) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                    'Failed to add reminder'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              ),
+                                                            );
+                                                          });
+                                                        }
+                                                      }
+                                                    },
+                                                    child: const Text(
+                                                      'Add',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: firstColor,
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        );
+                                      },
                                     );
-                                  },
-                                );
                                   },
                                 );
                               },
