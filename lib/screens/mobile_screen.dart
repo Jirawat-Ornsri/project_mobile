@@ -53,7 +53,6 @@ class _MobileScreenState extends State<MobileScreen> {
       body: PageView(
         children: [
           HomeScreen(),
-          //StaticScreen(),
           MapScreen(),
           ReminderScreen(),
           ProfileScreen(),

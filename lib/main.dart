@@ -8,6 +8,7 @@ import 'package:project_mobile/utils/colors.dart';
 import 'firebase_options.dart';
 
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

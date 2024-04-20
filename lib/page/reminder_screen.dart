@@ -44,6 +44,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   // get current user
   final user = FirebaseAuth.instance.currentUser;
 
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -77,6 +78,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                         .toList(),
                     drinks: [],
                   );
+
                   return Scaffold(
                       body: SafeArea(
                           child: SingleChildScrollView(
@@ -269,6 +271,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                           time: selectedTime!,
                                                         ));
                                                       });
+
+                                                      // insert data to firestore database
                                                       FirebaseFirestore.instance
                                                           .collection('users')
                                                           .doc(user?.uid)
