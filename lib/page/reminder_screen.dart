@@ -22,6 +22,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   final formKey = GlobalKey<FormState>();
 
   DateTime? selectedTime;
+  TimeOfDay time = TimeOfDay.now();
 
   // get reminder model
   Reminder reminder = Reminder(title: '', des: '', time: null);
@@ -177,70 +178,81 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
                                           thirdColor)),
-                              onPressed: () {
+                              onPressed: () async {
+                                // TimeOfDay? newTime = await showTimePicker(
+                                //   context: context, initialTime: TimeOfDay.now());
+
+                                // if (newTime == null) return;
+                                // setState(() {
+                                //   time = newTime;
+                                // });
+
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return Form(
-                                      key: formKey,
-                                      child: AlertDialog(
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextFormField(
-                                              maxLength: 20,
-                                              validator: RequiredValidator(
-                                                  errorText: "input title."),
-                                              decoration: InputDecoration(
-                                                hintText: 'Title',
-                                              ),
-                                              onSaved: (String? title) {
-                                                reminder.title = title!;
-                                              },
-                                            ),
-                                            TextFormField(
-                                              maxLength: 30,
-                                              validator: RequiredValidator(
-                                                  errorText:
-                                                      "input description."),
-                                              decoration: InputDecoration(
-                                                hintText: 'Description',
-                                              ),
-                                              onSaved: (String? des) {
-                                                reminder.des = des!;
-                                              },
-                                            ),
-                                            ListTile(
-                                              title: Text(selectedTime != null
-                                                  ? '${DateFormat('HH:mm').format(selectedTime!)}'
-                                                  : 'Select Time'),
-                                              trailing: Icon(Icons.access_time),
-                                              onTap: () async {
-                                                final TimeOfDay? pickedTime =
-                                                    await showTimePicker(
-                                                  context: context,
-                                                  initialTime:
-                                                      TimeOfDay.fromDateTime(
-                                                          selectedTime ??
-                                                              DateTime.now()),
-                                                );
-                                                if (pickedTime != null) {
-                                                  setState(() {
-                                                    selectedTime =
-                                                        DateTime.now();
-                                                    selectedTime = DateTime(
-                                                      selectedTime!.year,
-                                                      selectedTime!.month,
-                                                      selectedTime!.day,
-                                                      pickedTime.hour,
-                                                      pickedTime.minute,
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return Form(
+                                          key: formKey,
+                                          child: AlertDialog(
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                TextFormField(
+                                                  maxLength: 20,
+                                                  validator: RequiredValidator(
+                                                      errorText: "input title."),
+                                                  decoration: InputDecoration(
+                                                    hintText: 'Title',
+                                                  ),
+                                                  onSaved: (String? title) {
+                                                    reminder.title = title!;
+                                                  },
+                                                ),
+                                                TextFormField(
+                                                  maxLength: 30,
+                                                  validator: RequiredValidator(
+                                                      errorText:
+                                                          "input description."),
+                                                  decoration: InputDecoration(
+                                                    hintText: 'Description',
+                                                  ),
+                                                  onSaved: (String? des) {
+                                                    reminder.des = des!;
+                                                  },
+                                                ),
+                                                ListTile(
+                                                  onTap: () async {
+                                                    TimeOfDay? newTime = await showTimePicker(
+                                                      context: context, 
+                                                      initialTime: TimeOfDay.now(),
                                                     );
-                                                  });
-                                                }
-                                              },
+
+                                                    if (newTime == null) return;
+                                                    setState(() {
+                                                      time = newTime;
+                                                    });
+
+                                                    if (newTime != null) {
+                                                      setState(() {
+                                                        selectedTime =
+                                                            DateTime.now();
+                                                        selectedTime = DateTime(
+                                                          selectedTime!.year,
+                                                          selectedTime!.month,
+                                                          selectedTime!.day,
+                                                          newTime.hour,
+                                                          newTime.minute,
+                                                        );
+                                                      });
+                                                    }; 
+
+                                                  },
+                                                  title: Text(time.format(context)), // Display the selected time here
+                                                  trailing: Icon(Icons.access_time),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
                                         actions: [
                                           Align(
                                             alignment: Alignment.center,
@@ -338,6 +350,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                         ],
                                       ),
                                     );
+                                  },
+                                );
                                   },
                                 );
                               },
