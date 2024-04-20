@@ -4,7 +4,6 @@ import 'package:project_mobile/page/home_screen.dart';
 import 'package:project_mobile/page/map_screen.dart';
 import 'package:project_mobile/page/profile_screen.dart';
 import 'package:project_mobile/page/reminder_screen.dart';
-import 'package:project_mobile/page/static_screen.dart';
 import 'package:project_mobile/utils/colors.dart';
 
 class MobileScreen extends StatefulWidget {
@@ -53,7 +52,6 @@ class _MobileScreenState extends State<MobileScreen> {
       body: PageView(
         children: [
           HomeScreen(),
-          //StaticScreen(),
           MapScreen(),
           ReminderScreen(),
           ProfileScreen(),
@@ -77,11 +75,6 @@ class _MobileScreenState extends State<MobileScreen> {
                       color: _page == 0 ? secondColor : thirdColor),
                   label: '',
                   backgroundColor: thirdColor),
-              // BottomNavigationBarItem(
-              //     icon: Icon(Icons.bar_chart,
-              //         color: _page == 1 ? secondColor : thirdColor),
-              //     label: '',
-              //     backgroundColor: thirdColor),
               BottomNavigationBarItem(
                   icon: Icon(Icons.location_on_outlined,
                       color: _page == 1 ? secondColor : thirdColor),
