@@ -22,6 +22,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   final formKey = GlobalKey<FormState>();
 
   DateTime? selectedTime;
+  TimeOfDay time = TimeOfDay.now();
 
   // get reminder model
   Reminder reminder = Reminder(title: '', des: '', time: null);
@@ -43,7 +44,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   // get current user
   final user = FirebaseAuth.instance.currentUser;
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                         .toList(),
                     drinks: [],
                   );
-
                   return Scaffold(
                       body: SafeArea(
                           child: SingleChildScrollView(
@@ -179,168 +178,192 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
                                           thirdColor)),
-                              onPressed: () {
+                              onPressed: () async {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return Form(
-                                      key: formKey,
-                                      child: AlertDialog(
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextFormField(
-                                              maxLength: 20,
-                                              validator: RequiredValidator(
-                                                  errorText: "input title."),
-                                              decoration: InputDecoration(
-                                                hintText: 'Title',
-                                              ),
-                                              onSaved: (String? title) {
-                                                reminder.title = title!;
-                                              },
-                                            ),
-                                            TextFormField(
-                                              maxLength: 30,
-                                              validator: RequiredValidator(
-                                                  errorText:
-                                                      "input description."),
-                                              decoration: InputDecoration(
-                                                hintText: 'Description',
-                                              ),
-                                              onSaved: (String? des) {
-                                                reminder.des = des!;
-                                              },
-                                            ),
-                                            ListTile(
-                                              title: Text(selectedTime != null
-                                                  ? '${DateFormat('HH:mm').format(selectedTime!)}'
-                                                  : 'Select Time'),
-                                              trailing: Icon(Icons.access_time),
-                                              onTap: () async {
-                                                final TimeOfDay? pickedTime =
-                                                    await showTimePicker(
-                                                  context: context,
-                                                  initialTime:
-                                                      TimeOfDay.fromDateTime(
-                                                          selectedTime ??
-                                                              DateTime.now()),
-                                                );
-                                                if (pickedTime != null) {
-                                                  setState(() {
-                                                    selectedTime =
-                                                        DateTime.now();
-                                                    selectedTime = DateTime(
-                                                      selectedTime!.year,
-                                                      selectedTime!.month,
-                                                      selectedTime!.day,
-                                                      pickedTime.hour,
-                                                      pickedTime.minute,
-                                                    );
-                                                  });
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        actions: [
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: Container(
-                                              width: 86,
-                                              height: 28,
-                                              child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(fourColor),
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return Form(
+                                          key: formKey,
+                                          child: AlertDialog(
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                TextFormField(
+                                                  maxLength: 20,
+                                                  validator: RequiredValidator(
+                                                      errorText:
+                                                          "input title."),
+                                                  decoration: InputDecoration(
+                                                    hintText: 'Title',
+                                                  ),
+                                                  onSaved: (String? title) {
+                                                    reminder.title = title!;
+                                                  },
                                                 ),
-                                                onPressed: () {
-                                                  final user = FirebaseAuth
-                                                      .instance.currentUser;
-                                                  if (formKey.currentState!
-                                                      .validate()) {
-                                                    formKey.currentState!
-                                                        .save();
-                                                    if (selectedTime != null) {
-                                                      setState(() {
-                                                        profile.reminders
-                                                            .add(Reminder(
-                                                          title: reminder.title,
-                                                          des: reminder.des,
-                                                          time: selectedTime!,
-                                                        ));
-                                                      });
+                                                TextFormField(
+                                                  maxLength: 30,
+                                                  validator: RequiredValidator(
+                                                      errorText:
+                                                          "input description."),
+                                                  decoration: InputDecoration(
+                                                    hintText: 'Description',
+                                                  ),
+                                                  onSaved: (String? des) {
+                                                    reminder.des = des!;
+                                                  },
+                                                ),
+                                                ListTile(
+                                                  onTap: () async {
+                                                    TimeOfDay? newTime =
+                                                        await showTimePicker(
+                                                      context: context,
+                                                      initialTime:
+                                                          TimeOfDay.now(),
+                                                    );
 
-                                                      // insert data to firestore database
-                                                      FirebaseFirestore.instance
-                                                          .collection('users')
-                                                          .doc(user?.uid)
-                                                          .update({
-                                                        'reminders': FieldValue
-                                                            .arrayUnion([
-                                                          {
-                                                            'title':
-                                                                reminder.title,
-                                                            'description':
-                                                                reminder.des,
-                                                            'time':
-                                                                selectedTime!,
-                                                          }
-                                                        ])
-                                                      }).then((value) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: const Text(
-                                                                'Reminder added'),
-                                                            duration:
-                                                                const Duration(
-                                                                    seconds: 2),
-                                                            backgroundColor:
-                                                                Colors.green,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                          ),
-                                                        );
-                                                        formKey.currentState!
-                                                            .reset();
-                                                        selectedTime = null;
-                                                        Navigator.pop(context);
-                                                      }).catchError((error) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text(
-                                                                'Failed to add reminder'),
-                                                            duration: Duration(
-                                                                seconds: 2),
-                                                          ),
+                                                    if (newTime == null) return;
+                                                    setState(() {
+                                                      time = newTime;
+                                                    });
+
+                                                    if (newTime != null) {
+                                                      setState(() {
+                                                        selectedTime =
+                                                            DateTime.now();
+                                                        selectedTime = DateTime(
+                                                          selectedTime!.year,
+                                                          selectedTime!.month,
+                                                          selectedTime!.day,
+                                                          newTime.hour,
+                                                          newTime.minute,
                                                         );
                                                       });
                                                     }
-                                                  }
-                                                },
-                                                child: const Text(
-                                                  'Add',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: firstColor,
-                                                    fontSize: 15,
+                                                  },
+                                                  title: Text(time.format(
+                                                      context)), // Display the selected time here
+                                                  trailing:
+                                                      Icon(Icons.access_time),
+                                                ),
+                                              ],
+                                            ),
+                                            actions: [
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  width: 86,
+                                                  height: 28,
+                                                  child: ElevatedButton(
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all<Color>(
+                                                                  fourColor),
+                                                    ),
+                                                    onPressed: () {
+                                                      final user = FirebaseAuth
+                                                          .instance.currentUser;
+                                                      if (formKey.currentState!
+                                                          .validate()) {
+                                                        formKey.currentState!
+                                                            .save();
+                                                        if (selectedTime !=
+                                                            null) {
+                                                          setState(() {
+                                                            profile.reminders
+                                                                .add(Reminder(
+                                                              title: reminder
+                                                                  .title,
+                                                              des: reminder.des,
+                                                              time:
+                                                                  selectedTime!,
+                                                            ));
+                                                          });
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'users')
+                                                              .doc(user?.uid)
+                                                              .update({
+                                                            'reminders':
+                                                                FieldValue
+                                                                    .arrayUnion([
+                                                              {
+                                                                'title':
+                                                                    reminder
+                                                                        .title,
+                                                                'description':
+                                                                    reminder
+                                                                        .des,
+                                                                'time':
+                                                                    selectedTime!,
+                                                              }
+                                                            ])
+                                                          }).then((value) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                content: const Text(
+                                                                    'Reminder added'),
+                                                                duration:
+                                                                    const Duration(
+                                                                        seconds:
+                                                                            2),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                ),
+                                                              ),
+                                                            );
+                                                            formKey
+                                                                .currentState!
+                                                                .reset();
+                                                            selectedTime = null;
+                                                            Navigator.pop(
+                                                                context);
+                                                          }).catchError(
+                                                                  (error) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                    'Failed to add reminder'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              ),
+                                                            );
+                                                          });
+                                                        }
+                                                      }
+                                                    },
+                                                    child: const Text(
+                                                      'Add',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: firstColor,
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        );
+                                      },
                                     );
                                   },
                                 );
