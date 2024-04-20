@@ -15,8 +15,7 @@ class _MapScreenState extends State<MapScreen> {
       CustomInfoWindowController();
 
   // Location ตู้เติมน้ำ
-  final LatLng _MahidolU = LatLng(13.7959063, 100.3228888);
-  final LatLng _ICT_f1 = LatLng(13.7944369, 100.3244820);
+  final LatLng _MahidolU = LatLng(13.7943405, 100.3257339);
   final LatLng _ICT_f2_1stAidRoom = LatLng(13.7948003, 100.3246630);
   final LatLng _library_f1_coWorking = LatLng(13.7946961, 100.3241450);
   final LatLng _library_f1_eLecture = LatLng(13.7941767, 100.3241340);
@@ -33,74 +32,6 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // mark ที่ ICT ชั้น 1 สวนไผ่
-    _markers.add(
-      Marker(
-        markerId: MarkerId("ICT 1st floor"),
-        position: _ICT_f1,
-        onTap: () {
-          _customInfoWindowController.addInfoWindow!(
-            SizedBox(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Colors.white, width: 1, style: BorderStyle.solid),
-                  borderRadius: BorderRadius.circular(
-                      16), // เพิ่ม border radius ที่คุณต้องการ
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204),
-                      offset: const Offset(0, 1),
-                      blurRadius: 10.0,
-                      spreadRadius: 2.0,
-                    ),
-                    BoxShadow(
-                      color: Colors.white,
-                      offset: const Offset(0.0, 0.0),
-                      blurRadius: 0.0,
-                      spreadRadius: 0.0,
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(10.0), // ทำให้รูปขอบโค้ง
-                        child: Image(
-                          image: NetworkImage(
-                              'https://drive.google.com/uc?view&id=16uQQccIHyjZmUVfNk-cRpwskZWS0XVTM'),
-                        ),
-                      ),
-                      SizedBox(height: 16), // Add some spacing
-                      Text(
-                        "ตึกคณะ ICT ม.มหิดล",
-                        softWrap: true,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 54, 84, 134)),
-                      ),
-                      SizedBox(height: 2), // Add some spacing
-                      Text(
-                        "ชั้น 1 ใกล้กับสวนไผ่",
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 54, 84, 134)),
-                        softWrap: true,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            _ICT_f1,
-          );
-        },
-      ),
-    );
-
     // mark ที่ ICT ชั้น 2 หน้าห้องพยาบาล
     _markers.add(
       Marker(
@@ -458,7 +389,7 @@ class _MapScreenState extends State<MapScreen> {
             markers: _markers,
             initialCameraPosition: CameraPosition(
               target: _MahidolU,
-              zoom: 16.5,
+              zoom: 16,
             ),
           ),
           CustomInfoWindow(
