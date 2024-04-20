@@ -621,6 +621,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                             Map<String, dynamic> userData = {
                                               'username': profile.username,
                                               'email': profile.email,
+                                              'password': profile.password,
                                               'height': profile.height,
                                               'weight': profile.weight,
                                               'gender': profile.gender,
