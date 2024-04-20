@@ -75,7 +75,7 @@ class _AddDrinkScreenState extends State<AddDrinkScreen> {
     ),
     const DrinkSelect(
       iconPath: 'assets/protein.png',
-      nameDrink: 'Protien',
+      nameDrink: 'Protein',
       percen: 30,
     ),
     const DrinkSelect(
