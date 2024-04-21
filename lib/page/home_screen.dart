@@ -79,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return 'Good Night';
   }
 
-
   // ทำการเคลียร์ข้อมูลการดื่ม (drinks) ในโปรไฟล์ (Profile) ของผู้ใช้โดยอัตโนมัติทุกวันเที่ยงคืน
   void initState() {
     super.initState();
@@ -195,17 +194,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
 
                               // --- profile ---
-                              profile.photoUrl.isNotEmpty
-                                  ? CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(profile.photoUrl),
-                                      radius: 27.5,
-                                    )
-                                  : const CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          'https://zultimate.com/wp-content/uploads/2019/12/default-profile.png'),
-                                      radius: 27.5,
-                                    ),
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(profile.photoUrl),
+                                radius: 27.5,
+                              )
                             ],
                           ),
                         ),

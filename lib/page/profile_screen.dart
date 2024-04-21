@@ -173,17 +173,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 // -- profile --
-                                profile.photoUrl.isNotEmpty
-                                    ? CircleAvatar(
-                                        backgroundImage:
-                                            NetworkImage(profile.photoUrl),
-                                        radius: 60,
-                                      )
-                                    : const CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            'https://zultimate.com/wp-content/uploads/2019/12/default-profile.png'),
-                                        radius: 60,
-                                      ),
+                                CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(profile.photoUrl),
+                                  radius: 60,
+                                ),
 
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
