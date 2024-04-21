@@ -202,12 +202,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
 
-                        // *** part circle water ***
+                    
                         const SizedBox(
                           height: 45,
                         ),
 
-                        // water tank animation
+                        // *** part water tank animation ***
                         Container(
                           width: 200,
                           height: 200,
